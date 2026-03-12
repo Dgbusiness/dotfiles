@@ -2,6 +2,8 @@
 
 Personal setup for WSL2 + Ubuntu. Stack: React, Next.js, Node, NestJS, TypeScript.
 
+![example](./example.png)
+
 ## Includes
 
 | Tool | Description |
