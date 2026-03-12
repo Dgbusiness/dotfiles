@@ -37,11 +37,11 @@ if ! command -v apt &>/dev/null; then
   error "This script requires apt (Ubuntu/Debian)"
 fi
 
-log "Updating package list..."
-sudo apt update -qq
- 
 log "Installing base requirements (sudo, curl, fontconfig)..."
 apt install -y sudo curl fontconfig
+
+log "Updating package list..."
+sudo apt update -qq 
 
 # =============================================================================
 # 1. Neovim nightly
