@@ -39,6 +39,9 @@ fi
 
 log "Updating package list..."
 sudo apt update -qq
+ 
+log "Installing base requirements (sudo, curl, fontconfig)..."
+apt install -y sudo curl fontconfig
 
 # =============================================================================
 # 1. Neovim nightly
