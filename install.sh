@@ -8,6 +8,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REAL_HOME="$(eval echo ~"${SUDO_USER:-$USER}")"
 BOLD="\033[1m"
 GREEN="\033[0;32m"
 YELLOW="\033[0;33m"
@@ -123,7 +124,7 @@ fi
 # =============================================================================
 section "JetBrainsMono Nerd Font"
 
-FONT_DIR="$HOME/.local/share/fonts"
+FONT_DIR="$REAL_HOME/.local/share/fonts"
 FONT_CHECK="${FONT_DIR}/JetBrainsMonoNerdFont-Regular.ttf"
 
 if [ -f "$FONT_CHECK" ]; then
@@ -168,20 +169,20 @@ symlink() {
 }
 
 # Neovim
-symlink "${DOTFILES_DIR}/nvim"                   "$HOME/.config/nvim"
+symlink "${DOTFILES_DIR}/nvim" "$REAL_HOME/.config/nvim"
 
 # Tmux
-symlink "${DOTFILES_DIR}/tmux/tmux.conf"         "$HOME/.tmux.conf"
+symlink "${DOTFILES_DIR}/tmux/tmux.conf" "$REAL_HOME/.tmux.conf"
 
 # Starship
-symlink "${DOTFILES_DIR}/starship/starship.toml" "$HOME/.config/starship.toml"
+symlink "${DOTFILES_DIR}/starship/starship.toml" "$REAL_HOME/.config/starship.toml"
 
 # =============================================================================
 # 7. .bashrc
 # =============================================================================
 section "Configuring .bashrc"
 
-BASHRC="$HOME/.bashrc"
+BASHRC="$REAL_HOME/.bashrc"
 MARKER="# === dotfiles additions ==="
 
 if grep -q "$MARKER" "$BASHRC" 2>/dev/null; then
@@ -225,6 +226,12 @@ else
     +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettier_d-slim efm-langserver" \
     +qa 2>/dev/null || warn "LSPs installed (warnings in headless mode are normal)"
   log "LSPs installed"
+fi
+
+# Fix ownership — nvim headless corre como root y puede dejar archivos con owner root
+if [ -n "${SUDO_USER:-}" ]; then
+  chown -R "${SUDO_USER}:${SUDO_USER}" "${DOTFILES_DIR}/nvim"
+  log "Fixed ownership of nvim config to ${SUDO_USER}"
 fi
 
 # =============================================================================
