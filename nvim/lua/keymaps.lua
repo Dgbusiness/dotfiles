@@ -39,12 +39,6 @@ vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 vim.keymap.set("n", "<leader>bn", ":bnext<CR>",     { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
 
--- Window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
-
 -- Window splits and resize
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>",            { desc = "Split vertically" })
 vim.keymap.set("n", "<leader>sh", ":split<CR>",             { desc = "Split horizontally" })
@@ -125,8 +119,3 @@ end, { desc = "Terminal derecha (persistente)" })
 -- Cierra la ventana pero mantiene el buffer vivo
 vim.keymap.set("t", "<C-q>", "<C-\\><C-n><C-w>c", { desc = "Cerrar ventana terminal (mantiene buffer)" })
 
--- Navegación desde modo terminal
-vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Terminal → izquierda" })
-vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Terminal → abajo" })
-vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Terminal → arriba" })
-vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "Terminal → derecha" })

@@ -206,10 +206,6 @@ eval "$(starship init bash)"
 export PATH="$PATH:$HOME/.local/bin"
 eval "$(zoxide init bash)"
 
-# Tmux — auto-attach or create session on shell start
-if [ -z "$TMUX" ]; then
-  tmux attach 2>/dev/null || tmux new-session
-fi
 EOF
   log ".bashrc updated"
 fi

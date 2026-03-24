@@ -22,6 +22,7 @@ vim.pack.add({
 	"https://github.com/L3MON4D3/LuaSnip",
 	"https://github.com/tpope/vim-fugitive",
 	"https://github.com/tomasiser/vim-code-dark",
+	"https://github.com/christoomey/vim-tmux-navigator",
 })
 
 local function packadd(name)
@@ -41,6 +42,7 @@ packadd("efmls-configs-nvim")
 packadd("blink.cmp")
 packadd("LuaSnip")
 packadd("vim-fugitive")
+packadd("vim-tmux-navigator")
 
 vim.cmd.colorscheme("codedark")
 
@@ -52,3 +54,4 @@ require("plugins.mini")
 require("plugins.gitsigns")
 require("plugins.lsp")
 require("plugins.terminal")
+require("plugins.vim-tmux-navigator")
