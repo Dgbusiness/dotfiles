@@ -11,3 +11,4 @@ require("mini.pairs").setup({})       -- cierra paréntesis/comillas
 require("mini.trailspace").setup({})  -- marca espacios en blanco al final
 require("mini.bufremove").setup({})   -- borra buffers sin cerrar ventana
 require("mini.notify").setup({})      -- notificaciones flotantes
+require("mini.tabline").setup({})     -- buffers abiertos como pestañas en la parte superior

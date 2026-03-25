@@ -2,7 +2,7 @@
 -- PLUGINS — instalación con vim.pack y carga de configs
 -- ============================================================================
 vim.pack.add({
-	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/airblade/vim-gitgutter",
 	"https://github.com/echasnovski/mini.nvim",
 	"https://github.com/ibhagwan/fzf-lua",
 	"https://github.com/nvim-tree/nvim-tree.lua",
@@ -31,7 +31,7 @@ end
 
 packadd("vim-code-dark")
 packadd("nvim-treesitter")
-packadd("gitsigns.nvim")
+packadd("vim-gitgutter")
 packadd("mini.nvim")
 packadd("fzf-lua")
 packadd("nvim-tree.lua")
@@ -51,7 +51,7 @@ require("plugins.treesitter")
 require("plugins.nvim-tree")
 require("plugins.fzf-lua")
 require("plugins.mini")
-require("plugins.gitsigns")
+require("plugins.gitgutter")
 require("plugins.lsp")
 require("plugins.terminal")
 require("plugins.vim-tmux-navigator")
