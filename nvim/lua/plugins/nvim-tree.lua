@@ -2,9 +2,16 @@
 -- NVIM-TREE — explorador de archivos
 -- ============================================================================
 require("nvim-tree").setup({
-	view     = { width = 35 },
-	filters  = { dotfiles = false },
-	renderer = { group_empty = true },
+	view    = { width = 35 },
+	filters = { dotfiles = false },
+	git     = { enable = true, ignore = false },
+	renderer = {
+		group_empty   = true,
+		highlight_git = true,
+		icons = {
+			show = { git = true },
+		},
+	},
 })
 
 vim.keymap.set("n", "<leader>e", function()
