@@ -30,6 +30,7 @@ vim.keymap.set("n", "<A-j>", ":m .+1<CR>==",       { desc = "Move line down" })
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==",       { desc = "Move line up" })
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv",  { desc = "Move selection down" })
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv",  { desc = "Move selection up" })
+vim.keymap.set("v", "<leader>d", "yyp",  { desc = "Duplicate line" })
 
 -- Indent and reselect
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
@@ -67,6 +68,7 @@ end, { desc = "Toggle diagnostics" })
 -- ============================================================================
 -- GIT — vim-fugitive
 -- ============================================================================
+vim.keymap.set("n", "<leader>g",   ":Git ",               { desc = "Git command line" })
 vim.keymap.set("n", "<leader>gs",  ":Git<CR>",               { desc = "Git status" })
 vim.keymap.set("n", "<leader>ga",  ":Git add %<CR>",         { desc = "Git add file" })
 vim.keymap.set("n", "<leader>gc",  ":Git commit<CR>",        { desc = "Git commit" })
