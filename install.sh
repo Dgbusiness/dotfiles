@@ -241,9 +241,9 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 if ! command -v nvim &>/dev/null; then
   warn "Neovim not found in PATH, skipping LSP installation"
 else
-  log "Installing: typescript-language-server, json-lsp, bash-language-server, lua-language-server, eslint_d, prettier_d-slim, efm-langserver, intelephense, blade-formatter..."
+  log "Installing: typescript-language-server, json-lsp, bash-language-server, lua-language-server, eslint_d, prettierd, efm-langserver, intelephense, blade-formatter..."
   nvim --headless \
-    +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettier_d-slim efm-langserver intelephense blade-formatter" \
+    +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettierd efm-langserver intelephense blade-formatter" \
     +qa 2>/dev/null || warn "LSPs installed (warnings in headless mode are normal)"
   log "LSPs installed"
 fi
