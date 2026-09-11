@@ -16,8 +16,3 @@ eval "$(starship init bash)"
 # Zoxide (reemplaza cd)
 export PATH="$PATH:$HOME/.local/bin"
 eval "$(zoxide init bash)"
-
-# Tmux — arrancar automáticamente si no hay sesión activa
-if [ -z "$TMUX" ]; then
-  tmux attach 2>/dev/null || tmux new-session
-fi

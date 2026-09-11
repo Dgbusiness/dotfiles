@@ -23,6 +23,10 @@ vim.pack.add({
 	"https://github.com/tpope/vim-fugitive",
 	"https://github.com/tomasiser/vim-code-dark",
 	"https://github.com/christoomey/vim-tmux-navigator",
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MunifTanjim/nui.nvim",
+	"https://github.com/nvim-neotest/nvim-nio",
+	"https://github.com/adalessa/laravel.nvim",
 })
 
 local function packadd(name)
@@ -43,6 +47,10 @@ packadd("blink.cmp")
 packadd("LuaSnip")
 packadd("vim-fugitive")
 packadd("vim-tmux-navigator")
+packadd("plenary.nvim")
+packadd("nui.nvim")
+packadd("nvim-nio")
+packadd("laravel.nvim")
 
 vim.cmd.colorscheme("codedark")
 
@@ -55,3 +63,4 @@ require("plugins.gitgutter")
 require("plugins.lsp")
 require("plugins.terminal")
 require("plugins.vim-tmux-navigator")
+require("plugins.laravel")

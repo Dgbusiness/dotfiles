@@ -107,7 +107,27 @@ else
 fi
 
 # =============================================================================
-# 4. Starship
+# 4. Tree-sitter CLI
+# =============================================================================
+section "Tree-sitter CLI"
+
+if command -v tree-sitter &>/dev/null; then
+  log "Tree-sitter CLI already installed: $(tree-sitter --version)"
+else
+  log "Installing tree-sitter CLI (required by nvim-treesitter to compile parsers)..."
+  TS_VERSION="v0.27.0"
+  TS_URL="https://github.com/tree-sitter/tree-sitter/releases/download/${TS_VERSION}/tree-sitter-linux-x64.gz"
+  mkdir -p "$REAL_HOME/.local/bin"
+  curl -fsSL "$TS_URL" -o "/tmp/tree-sitter.gz"
+  gunzip -f "/tmp/tree-sitter.gz"
+  install -m 755 "/tmp/tree-sitter" "$REAL_HOME/.local/bin/tree-sitter"
+  rm -f "/tmp/tree-sitter"
+  export PATH="$PATH:$REAL_HOME/.local/bin"
+  log "Tree-sitter CLI installed at ${REAL_HOME}/.local/bin/tree-sitter"
+fi
+
+# =============================================================================
+# 5. Starship
 # =============================================================================
 section "Starship"
 
@@ -120,7 +140,7 @@ else
 fi
 
 # =============================================================================
-# 5. JetBrainsMono Nerd Font
+# 6. JetBrainsMono Nerd Font
 # =============================================================================
 section "JetBrainsMono Nerd Font"
 
@@ -143,7 +163,7 @@ else
 fi
 
 # =============================================================================
-# 6. Dotfile symlinks
+# 7. Dotfile symlinks
 # =============================================================================
 section "Creating symlinks"
 
@@ -178,7 +198,7 @@ symlink "${DOTFILES_DIR}/tmux/tmux.conf" "$REAL_HOME/.tmux.conf"
 symlink "${DOTFILES_DIR}/starship/starship.toml" "$REAL_HOME/.config/starship.toml"
 
 # =============================================================================
-# 7. .bashrc
+# 8. .bashrc
 # =============================================================================
 section "Configuring .bashrc"
 
@@ -212,7 +232,7 @@ EOF
 fi
 
 # =============================================================================
-# 8. LSPs via Mason (headless Neovim)
+# 9. LSPs via Mason (headless Neovim)
 # =============================================================================
 section "Installing LSPs via Mason"
 
@@ -221,9 +241,9 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 if ! command -v nvim &>/dev/null; then
   warn "Neovim not found in PATH, skipping LSP installation"
 else
-  log "Installing: typescript-language-server, json-lsp, bash-language-server, lua-language-server, eslint_d, prettier_d-slim, efm-langserver..."
+  log "Installing: typescript-language-server, json-lsp, bash-language-server, lua-language-server, eslint_d, prettier_d-slim, efm-langserver, intelephense..."
   nvim --headless \
-    +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettier_d-slim efm-langserver" \
+    +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettier_d-slim efm-langserver intelephense" \
     +qa 2>/dev/null || warn "LSPs installed (warnings in headless mode are normal)"
   log "LSPs installed"
 fi

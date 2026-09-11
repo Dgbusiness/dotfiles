@@ -23,6 +23,7 @@ local setup_treesitter = function()
 		"vimdoc",
 		"regex",  -- útil para JS
 		"jsdoc",  -- comentarios JSDoc
+		"php",
 	}
 
 	local config             = require("nvim-treesitter.config")

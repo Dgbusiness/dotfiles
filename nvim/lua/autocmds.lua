@@ -42,6 +42,34 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
+-- Pint (Laravel) — corre DESPUÉS de guardar, sobre el archivo real en disco,
+-- y recarga el buffer. Pint no soporta stdin: formatea el archivo in-place.
+-- Si corriera en BufWritePre (antes de escribir), formatearía la versión
+-- vieja que todavía está en disco y el resultado pisaría el cambio recién
+-- hecho por el usuario al guardar.
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = augroup,
+	pattern = "*.php",
+	callback = function(args)
+		local root = vim.fs.root(args.file, "composer.json") or vim.fn.getcwd()
+		local pint = root .. "/vendor/bin/pint"
+		if vim.fn.executable(pint) == 0 then
+			pint = "pint"
+			if vim.fn.executable(pint) == 0 then return end
+		end
+
+		vim.system({ pint, args.file }, { text = true }, function()
+			vim.schedule(function()
+				if vim.api.nvim_buf_is_valid(args.buf) then
+					vim.api.nvim_buf_call(args.buf, function()
+						vim.cmd("checktime")
+					end)
+				end
+			end)
+		end)
+	end,
+})
+
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = augroup,

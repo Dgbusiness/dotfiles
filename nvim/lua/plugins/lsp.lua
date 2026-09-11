@@ -156,11 +156,15 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
+-- PHP / Laravel
+vim.lsp.config("intelephense", {})
+
 vim.lsp.enable({
 	"ts_ls",
 	"jsonls",
 	"bashls",
 	"lua_ls",
+	"intelephense",
 	"efm",
 })
 
