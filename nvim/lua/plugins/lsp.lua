@@ -156,8 +156,10 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
--- PHP / Laravel
-vim.lsp.config("intelephense", {})
+-- PHP / Laravel (incluye .blade.php, que detectamos como filetype "blade")
+vim.lsp.config("intelephense", {
+	filetypes = { "php", "blade" },
+})
 
 vim.lsp.enable({
 	"ts_ls",
@@ -178,6 +180,7 @@ do
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt      = require("efmls-configs.formatters.shfmt")
 	local stylua     = require("efmls-configs.formatters.stylua")
+	local blade_formatter = require("efmls-configs.formatters.blade_formatter")
 
 	vim.lsp.config("efm", {
 		filetypes = {
@@ -195,6 +198,7 @@ do
 			"sh",
 			"bash",
 			"lua",
+			"blade",
 		},
 		init_options = { documentFormatting = true },
 		settings = {
@@ -213,6 +217,7 @@ do
 				sh              = { shellcheck, shfmt },
 				bash            = { shellcheck, shfmt },
 				lua             = { stylua },
+				blade           = { blade_formatter },
 			},
 		},
 	})

@@ -6,6 +6,15 @@
 local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 _G.user_augroup = augroup
 
+-- Por defecto nvim detecta *.blade.php como filetype "php" (matchea la
+-- última extensión). Lo pasamos a "blade" para que efm use blade-formatter
+-- en vez de tratarlo como PHP puro (blade mezcla HTML + directivas + PHP).
+vim.filetype.add({
+	pattern = {
+		[".*%.blade%.php"] = "blade",
+	},
+})
+
 -- Format on save (solo web dev + shell)
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = augroup,
@@ -19,6 +28,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		"*.md",
 		"*.sh", "*.bash", "*.zsh",
 		"*.lua",
+		"*.blade.php",
 	},
 	callback = function(args)
 		if vim.bo[args.buf].buftype ~= "" then return end
@@ -51,6 +61,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	group = augroup,
 	pattern = "*.php",
 	callback = function(args)
+		-- Pint solo entiende PHP puro; los .blade.php los formatea
+		-- blade-formatter (vía efm, filetype "blade").
+		if args.file:match("%.blade%.php$") then return end
+
 		local root = vim.fs.root(args.file, "composer.json") or vim.fn.getcwd()
 		local pint = root .. "/vendor/bin/pint"
 		if vim.fn.executable(pint) == 0 then
