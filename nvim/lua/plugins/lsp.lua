@@ -174,9 +174,10 @@ vim.lsp.enable({
 -- EFM — linting y formatting para web dev
 -- ============================================================================
 do
-	local prettier_d = require("efmls-configs.formatters.prettier_d")
-	local eslint_d   = require("efmls-configs.linters.eslint_d")
-	local fixjson    = require("efmls-configs.formatters.fixjson")
+	local prettier_d   = require("efmls-configs.formatters.prettier_d")
+	local eslint_d     = require("efmls-configs.linters.eslint_d")
+	local eslint_d_fmt = require("efmls-configs.formatters.eslint_d")
+	local fixjson      = require("efmls-configs.formatters.fixjson")
 	local shellcheck = require("efmls-configs.linters.shellcheck")
 	local shfmt      = require("efmls-configs.formatters.shfmt")
 	local stylua     = require("efmls-configs.formatters.stylua")
@@ -203,17 +204,17 @@ do
 		init_options = { documentFormatting = true },
 		settings = {
 			languages = {
-				javascript      = { eslint_d, prettier_d },
-				javascriptreact = { eslint_d, prettier_d },
-				typescript      = { eslint_d, prettier_d },
-				typescriptreact = { eslint_d, prettier_d },
+				javascript      = { eslint_d, prettier_d, eslint_d_fmt },
+				javascriptreact = { eslint_d, prettier_d, eslint_d_fmt },
+				typescript      = { eslint_d, prettier_d, eslint_d_fmt },
+				typescriptreact = { eslint_d, prettier_d, eslint_d_fmt },
 				json            = { eslint_d, fixjson },
 				css             = { prettier_d },
 				scss            = { prettier_d },
 				html            = { prettier_d },
 				markdown        = { prettier_d },
-				vue             = { eslint_d, prettier_d },
-				svelte          = { eslint_d, prettier_d },
+				vue             = { eslint_d, prettier_d, eslint_d_fmt },
+				svelte          = { eslint_d, prettier_d, eslint_d_fmt },
 				sh              = { shellcheck, shfmt },
 				bash            = { shellcheck, shfmt },
 				lua             = { stylua },
