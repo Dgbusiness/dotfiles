@@ -3,8 +3,8 @@
 -- ============================================================================
 
 -- Mason — gestor de instalación de LSPs/linters/formatters
--- Instala con: :MasonInstall typescript-language-server eslint_d prettier_d-slim
---              json-lsp bash-language-server lua-language-server
+-- Lista de paquetes: scripts/mason-install.lua (fuente única)
+-- Instala con: nvim --headless "+luafile ~/dotfiles/scripts/mason-install.lua"
 require("mason").setup({})
 
 -- Signos de diagnóstico
@@ -131,8 +131,21 @@ vim.lsp.config["*"] = {
 	capabilities = require("blink.cmp").get_lsp_capabilities(),
 }
 
--- TypeScript / JavaScript (React, Next, Node, Nest)
-vim.lsp.config("ts_ls", {})
+-- TypeScript / JavaScript (React, Node) + TS dentro de .vue vía @vue/typescript-plugin
+local vue_plugin_path = vim.fn.stdpath("data")
+	.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
+vim.lsp.config("ts_ls", {
+	init_options = {
+		plugins = {
+			{ name = "@vue/typescript-plugin", location = vue_plugin_path, languages = { "vue" } },
+		},
+	},
+	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
+})
+
+-- Vue 3 (HTML/CSS de los .vue; el TS lo maneja ts_ls con el plugin)
+vim.lsp.config("vue_ls", {})
 
 -- JSON con schemas
 vim.lsp.config("jsonls", {
@@ -163,6 +176,7 @@ vim.lsp.config("intelephense", {
 
 vim.lsp.enable({
 	"ts_ls",
+	"vue_ls",
 	"jsonls",
 	"bashls",
 	"lua_ls",
@@ -195,7 +209,6 @@ do
 			"html",
 			"markdown",
 			"vue",
-			"svelte",
 			"sh",
 			"bash",
 			"lua",
@@ -214,7 +227,6 @@ do
 				html            = { prettier_d },
 				markdown        = { prettier_d },
 				vue             = { eslint_d, prettier_d, eslint_d_fmt },
-				svelte          = { eslint_d, prettier_d, eslint_d_fmt },
 				sh              = { shellcheck, shfmt },
 				bash            = { shellcheck, shfmt },
 				lua             = { stylua },

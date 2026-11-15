@@ -280,11 +280,12 @@ export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 if ! command -v nvim &>/dev/null; then
   warn "Neovim not found in PATH, skipping LSP installation"
 else
-  log "Installing: typescript-language-server, json-lsp, bash-language-server, lua-language-server, eslint_d, prettierd, efm-langserver, intelephense, blade-formatter..."
-  nvim --headless \
-    +"MasonInstall typescript-language-server json-lsp bash-language-server lua-language-server eslint_d prettierd efm-langserver intelephense blade-formatter" \
-    +qa 2>/dev/null || warn "LSPs installed (warnings in headless mode are normal)"
-  log "LSPs installed"
+  log "Installing Mason packages (list in scripts/mason-install.lua)..."
+  if nvim --headless "+luafile ${DOTFILES_DIR}/scripts/mason-install.lua"; then
+    log "LSPs installed"
+  else
+    warn "Some Mason packages failed — run :Mason inside nvim to check"
+  fi
 fi
 
 # Fix ownership — nvim headless corre como root y puede dejar archivos con owner root

@@ -71,7 +71,7 @@ source ~/.bashrc
 - **JetBrainsMono Nerd Font** to `~/.local/share/fonts`
 - Symlinks for all dotfiles to their correct system paths
 - `.bashrc` additions block (only appended once, idempotent)
-- LSPs via Mason: `typescript-language-server`, `json-lsp`, `bash-language-server`, `lua-language-server`, `eslint_d`, `prettier_d-slim`, `efm-langserver`
+- LSPs via Mason (list in `scripts/mason-install.lua`): `typescript-language-server`, `vue-language-server`, `intelephense`, `json-lsp`, `bash-language-server`, `lua-language-server`, `efm` + `eslint_d`, `prettierd`, `blade-formatter`, `fixjson`, `shellcheck`, `shfmt`, `stylua`
 
 > After install, set the font in **Windows Terminal** settings: `JetBrainsMono Nerd Font Mono`
 
@@ -115,9 +115,9 @@ Managed with `vim.pack` (native Neovim 0.12 plugin manager — no lazy.nvim requ
 
 ## Active LSPs
 
-Web dev only: `ts_ls`, `jsonls`, `bashls`, `lua_ls`, `efm`
+PHP (Laravel, Livewire, Filament) + JS/TS (React, Vue): `ts_ls` (+ `@vue/typescript-plugin`), `vue_ls`, `intelephense`, `jsonls`, `bashls`, `lua_ls`, `efm`
 
-EFM formatters/linters: `eslint_d`, `prettier_d`, `fixjson`, `shellcheck`, `shfmt`, `stylua`
+EFM formatters/linters: `eslint_d`, `prettier_d`, `blade-formatter`, `fixjson`, `shellcheck`, `shfmt`, `stylua`
 
 ## Key mappings
 

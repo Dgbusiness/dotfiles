@@ -12,11 +12,9 @@ local setup_treesitter = function()
 		"typescript",
 		"tsx",
 		"json",
-		"graphql",
 		"markdown",
 		"markdown_inline",
 		"vue",
-		"svelte",
 		"bash",
 		"lua",
 		"vim",
@@ -24,6 +22,7 @@ local setup_treesitter = function()
 		"regex",  -- útil para JS
 		"jsdoc",  -- comentarios JSDoc
 		"php",
+		"blade",  -- Laravel / Livewire / Filament
 	}
 
 	local config             = require("nvim-treesitter.config")

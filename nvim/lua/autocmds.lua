@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		"*.json",
 		"*.css", "*.scss",
 		"*.html",
-		"*.vue", "*.svelte",
+		"*.vue",
 		"*.md",
 		"*.sh", "*.bash", "*.zsh",
 		"*.lua",
