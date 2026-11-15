@@ -2,7 +2,11 @@
 # =============================================================================
 # install.sh — dotfiles setup for WSL2 + Ubuntu
 # Installs: Neovim nightly, dependencies (fzf, ripgrep, bat, zoxide, starship,
-#           tmux), JetBrainsMono Nerd Font, creates symlinks and configures .bashrc
+#           tmux or herdr), JetBrainsMono Nerd Font, creates symlinks and
+#           configures .bashrc
+#
+# Multiplexer: prompts for tmux or herdr. Skip the prompt with
+#   MULTIPLEXER=tmux ./install.sh   or   MULTIPLEXER=herdr ./install.sh
 # =============================================================================
 
 set -euo pipefail
@@ -37,6 +41,16 @@ fi
 if ! command -v apt &>/dev/null; then
   error "This script requires apt (Ubuntu/Debian)"
 fi
+
+MULTIPLEXER="${MULTIPLEXER:-}"
+if [ -z "$MULTIPLEXER" ]; then
+  read -rp "Terminal multiplexer? [tmux/herdr] (default: tmux) " MULTIPLEXER
+  MULTIPLEXER="${MULTIPLEXER:-tmux}"
+fi
+case "$MULTIPLEXER" in
+  tmux|herdr) log "Multiplexer: ${MULTIPLEXER}" ;;
+  *) error "Invalid MULTIPLEXER '${MULTIPLEXER}' (use tmux or herdr)" ;;
+esac
 
 log "Installing base requirements (sudo, curl, fontconfig)..."
 apt install -y sudo curl fontconfig
@@ -75,9 +89,10 @@ fi
 # =============================================================================
 # 2. Base dependencies
 # =============================================================================
-section "Dependencies (fzf, ripgrep, bat, tmux, curl, git, unzip)"
+section "Dependencies (fzf, ripgrep, bat, curl, git, unzip)"
 
-PKGS=(fzf ripgrep bat tmux curl git unzip build-essential)
+PKGS=(fzf ripgrep bat curl git unzip build-essential)
+[ "$MULTIPLEXER" = "tmux" ] && PKGS+=(tmux)
 MISSING=()
 
 for pkg in "${PKGS[@]}"; do
@@ -104,6 +119,26 @@ else
   log "Installing zoxide..."
   curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
   log "Zoxide installed"
+fi
+
+# =============================================================================
+# 3b. Herdr (only if chosen)
+# =============================================================================
+if [ "$MULTIPLEXER" = "herdr" ]; then
+  section "Herdr"
+
+  if command -v herdr &>/dev/null || [ -x "$REAL_HOME/.local/bin/herdr" ]; then
+    log "Herdr already installed"
+  else
+    log "Installing herdr (official installer, as ${SUDO_USER:-$USER})..."
+    # Run as the real user so the binary lands in their home, not root's
+    if [ -n "${SUDO_USER:-}" ]; then
+      sudo -u "$SUDO_USER" sh -c 'curl -fsSL https://herdr.dev/install.sh | sh'
+    else
+      curl -fsSL https://herdr.dev/install.sh | sh
+    fi
+    log "Herdr installed"
+  fi
 fi
 
 # =============================================================================
@@ -191,8 +226,12 @@ symlink() {
 # Neovim
 symlink "${DOTFILES_DIR}/nvim" "$REAL_HOME/.config/nvim"
 
-# Tmux
-symlink "${DOTFILES_DIR}/tmux/tmux.conf" "$REAL_HOME/.tmux.conf"
+# Multiplexer
+if [ "$MULTIPLEXER" = "tmux" ]; then
+  symlink "${DOTFILES_DIR}/tmux/tmux.conf" "$REAL_HOME/.tmux.conf"
+else
+  symlink "${DOTFILES_DIR}/herdr/config.toml" "$REAL_HOME/.config/herdr/config.toml"
+fi
 
 # Starship
 symlink "${DOTFILES_DIR}/starship/starship.toml" "$REAL_HOME/.config/starship.toml"
@@ -252,6 +291,9 @@ fi
 if [ -n "${SUDO_USER:-}" ]; then
   chown -R "${SUDO_USER}:${SUDO_USER}" "${DOTFILES_DIR}/nvim"
   log "Fixed ownership of nvim config to ${SUDO_USER}"
+  if [ -d "$REAL_HOME/.config/herdr" ]; then
+    chown -R "${SUDO_USER}:${SUDO_USER}" "$REAL_HOME/.config/herdr"
+  fi
 fi
 
 # =============================================================================
@@ -262,7 +304,11 @@ section "✅ Installation complete"
 echo ""
 echo -e "  ${BOLD}Dotfiles:${RESET}  ${DOTFILES_DIR}"
 echo -e "  ${BOLD}Neovim:${RESET}    ~/.config/nvim          → ${DOTFILES_DIR}/nvim"
-echo -e "  ${BOLD}Tmux:${RESET}      ~/.tmux.conf            → ${DOTFILES_DIR}/tmux/tmux.conf"
+if [ "$MULTIPLEXER" = "tmux" ]; then
+  echo -e "  ${BOLD}Tmux:${RESET}      ~/.tmux.conf            → ${DOTFILES_DIR}/tmux/tmux.conf"
+else
+  echo -e "  ${BOLD}Herdr:${RESET}     ~/.config/herdr/config.toml → ${DOTFILES_DIR}/herdr/config.toml"
+fi
 echo -e "  ${BOLD}Starship:${RESET}  ~/.config/starship.toml → ${DOTFILES_DIR}/starship/starship.toml"
 echo ""
 echo -e "  ${YELLOW}Next steps:${RESET}"

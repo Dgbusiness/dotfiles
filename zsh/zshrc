@@ -1,0 +1,48 @@
+# =============================================================================
+# Pegar al final de ~/.zshrc en la Mac (adaptado desde ~/.bashrc de WSL)
+# =============================================================================
+
+# Homebrew (Apple Silicon). En Mac Intel: /usr/local/bin/brew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Completions de zsh
+autoload -Uz compinit && compinit
+
+# PATH personal
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# fnm (reemplaza a nvm; instalado con brew)
+eval "$(fnm env --use-on-cd --shell zsh)"
+
+# Starship prompt
+eval "$(starship init zsh)"
+
+# Zoxide (reemplaza cd)
+eval "$(zoxide init zsh)"
+
+# Secretos locales (NO versionar este archivo)
+[ -f "$HOME/.zshrc.secrets" ] && source "$HOME/.zshrc.secrets"
+
+# Churupos Production commands
+churupos() {
+  case "$1" in
+    bcv:update)
+      # Update BCV rate
+      curl -L -X POST https://churupos.com/api/bcv/update \
+        -H "x-cron-secret: ${CHURUPOS_CRON_SECRET:?Falta CHURUPOS_CRON_SECRET en ~/.zshrc.secrets}"
+      ;;
+    *)
+      echo "Unknown command: $1"
+      ;;
+  esac
+}
+
+# Claude Code account aliases
+alias claude-personal="CLAUDE_CONFIG_DIR=~/.claude command claude"
+alias claude-adaction="CLAUDE_CONFIG_DIR=~/.claude-adaction command claude"
+# Prevent accidental use of the bare 'claude' command
+alias claude="echo '⚠️  Use claude-personal or claude-adaction'"
