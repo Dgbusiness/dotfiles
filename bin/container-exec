@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# =============================================================================
+# container-exec — runs a command inside the RUNNING container that
+# bind-mounts the current project, at the equivalent path.
+#
+#   cd ~/jobs/adaction/service-hub/app && container-exec php artisan route:list
+#
+# Project root = nearest dir with composer.json (fallback: git root, then $PWD).
+# The container is found by its bind mount (not by service name), so it works
+# with any compose file or devcontainer (api.adgem, app, servicehub.adgem, ...).
+#
+# Exit codes: 3 = no running container mounts this project. Otherwise, the
+# command's own exit code.
+# Used by nvim (Pint on save, laravel.nvim "container" environment).
+# Compatible with macOS bash 3.2.
+# =============================================================================
+set -euo pipefail
+export PATH="$PATH:$HOME/.orbstack/bin:/opt/homebrew/bin:/usr/local/bin"
+
+[ $# -gt 0 ] || { echo "usage: container-exec <command> [args...]" >&2; exit 2; }
+
+root=""
+dir="$PWD"
+while [ "$dir" != "/" ]; do
+  if [ -f "$dir/composer.json" ]; then root="$dir"; break; fi
+  dir="$(dirname "$dir")"
+done
+[ -n "$root" ] || root="$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"
+
+ids="$(docker ps -q 2>/dev/null || true)"
+[ -n "$ids" ] || { echo "container-exec: no running containers" >&2; exit 3; }
+
+# shellcheck disable=SC2086
+match="$(docker inspect $ids | jq -r --arg root "$root" '
+  [ .[] | . as $c | .Mounts[]? | select(.Type == "bind" and .Source == $root)
+    | "\($c.Id) \(.Destination)" ] | first // empty')"
+
+[ -n "$match" ] || { echo "container-exec: no running container mounts $root" >&2; exit 3; }
+
+id="${match%% *}"
+dest="${match#* }"
+workdir="${dest}${PWD#"$root"}"
+
+tty_flags=(-i)
+if [ -t 0 ] && [ -t 1 ]; then tty_flags+=(-t); fi
+
+exec docker exec "${tty_flags[@]}" -w "$workdir" "$id" "$@"
